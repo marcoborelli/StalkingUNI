@@ -84,7 +84,9 @@ namespace FinalVoteExtractor {
 
                     break;
                 case Esame.AlgebraLineare:
-                    //TODO
+                    if (input.Equals("30L")) {
+                        voto = 31;
+                    }
                     break;
             }
 
