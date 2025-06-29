@@ -5,14 +5,35 @@ using System.Text.RegularExpressions;
 
 namespace FinalVoteExtractor {
     class MainClass {
+        public enum Esame {
+            Analisi1,
+            AlgebraLineare,
+            Count
+        }
+
         public static void Main(string[] args) {
-            if (args.Length != 2) {
-                Console.WriteLine("Error. Usage: ./programma <InputFilename> <outputFilename>");
+            if (args.Length != 3) {
+                Console.WriteLine("Error. Usage: ./programma <InputFilename> <outputFilename> <ExameTypeNumber>");
+
+                Console.WriteLine("The ExameType are: ");
+                for (int i = 0; i < (int)Esame.Count; i++) {
+                    Console.WriteLine($"{i}: {Enum.GetName(typeof(Esame), i)}");
+                }
+
                 throw new Exception("Wrong number of parameters");
             }
 
             string inputFilename = args[0];
             string outputFilename = args[1];
+            Esame tipoEsame;
+
+            if (int.TryParse(args[2], out int num) && Enum.IsDefined(typeof(Esame), num)) {
+                    tipoEsame = (Esame)num;
+            } else {
+                throw new Exception("Wrong input enum. Call the program without parameters to see the enum list");
+            }
+
+
             if (!File.Exists(args[0])) {
                 throw new Exception("Wrong input file path");
             }
@@ -26,7 +47,7 @@ namespace FinalVoteExtractor {
                 while ((line = sr.ReadLine()) != null) {
                     string[] fields = line.Split(';');
                     int mat = int.Parse(fields[0]);
-                    int voto = GetVoto(fields[1]);
+                    int voto = GetVoto(fields[1], tipoEsame);
 
                     /*usando mat_voto[mat] = voto e non la mat_voto.Add(mat, voto) assicuro che se la matricola gia' esiste il valore venga sovrascritto col nuovo
                     Con la .Add genererebbe eccezione*/
@@ -47,14 +68,26 @@ namespace FinalVoteExtractor {
 
         }
 
-        public static int GetVoto(string input) {
+        public static int GetVoto(string input, Esame tipoEsame) {
             int voto = 0;
-            Regex rg = new Regex(@".+\s(?<votoInTrentesimi>\d+).+\s(?<suTrenta>\d)");
-            Match match = rg.Match(input);
 
-            if (rg.IsMatch(input)) {
-                voto = int.Parse(match.Groups["votoInTrentesimi"].Value);
+            switch(tipoEsame) {
+                case Esame.Analisi1:
+                    //esempio di match: "Esame superato con 25 su 30"
+                    Regex rg = new Regex(@".+\s(?<votoInTrentesimi>\d+).+\s(?<suTrenta>\d)");
+                    Match match = rg.Match(input);
+
+                    //il controllo e' perche' ci puo' anche essere scritto "Assente", "Ritirato", "Filtri non passati"...
+                    if (rg.IsMatch(input)) {
+                        voto = int.Parse(match.Groups["votoInTrentesimi"].Value);
+                    }
+
+                    break;
+                case Esame.AlgebraLineare:
+                    //TODO
+                    break;
             }
+
 
             return voto;
         }
