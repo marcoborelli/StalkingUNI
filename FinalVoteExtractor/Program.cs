@@ -8,17 +8,20 @@ namespace FinalVoteExtractor {
         public static void Main(string[] args) {
             if (args.Length != 2) {
                 Console.WriteLine("Error. Usage: ./programma <InputFilename> <outputFilename>");
-                throw new Exception("Wrong parameters");
+                throw new Exception("Wrong number of parameters");
             }
 
-            string InputFilename = args[0];
+            string inputFilename = args[0];
             string outputFilename = args[1];
+            if (!File.Exists(args[0])) {
+                throw new Exception("Wrong input file path");
+            }
 
             Dictionary<int, int> mat_voto = new Dictionary<int, int>();
 
 
             string line = "";
-            using (StreamReader sr = new StreamReader(InputFilename)) {
+            using (StreamReader sr = new StreamReader(inputFilename)) {
                 sr.ReadLine(); //salto l'intestazione
                 while ((line = sr.ReadLine()) != null) {
                     string[] fields = line.Split(';');
