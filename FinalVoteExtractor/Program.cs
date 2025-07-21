@@ -77,11 +77,9 @@ namespace FinalVoteExtractor {
 
             switch(tipoEsame) {
                 case Esame.Analisi1:
-                    //esempio di match: "Esame superato con 25 su 30"
                     Regex rg = new Regex(@".+\s(?<votoInTrentesimi>\d+).+\s(?<suTrenta>\d)");
                     Match match = rg.Match(input);
 
-                    //il controllo e' perche' ci puo' anche essere scritto "Assente", "Ritirato", "Filtri non passati"...
                     if (rg.IsMatch(input)) {
                         voto = int.Parse(match.Groups["votoInTrentesimi"].Value);
                     }
@@ -95,6 +93,7 @@ namespace FinalVoteExtractor {
 
                         if (voto < 18) //messo per standard, se e' insufficiente associo lo 0
                             voto = 0;
+
                     }
                     break;
                 case Esame.Fondamenti:
