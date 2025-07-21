@@ -8,6 +8,9 @@ namespace FinalVoteExtractor {
         public enum Esame {
             Analisi1,
             AlgebraLineare,
+            Fondamenti,
+            Programmazione1,
+            Programmazione2,
             Count
         }
 
@@ -92,6 +95,13 @@ namespace FinalVoteExtractor {
                         if (voto < 18) //messo per standard, se e' insufficiente associo lo 0
                             voto = 0;
                     }
+                    break;
+                case Esame.Fondamenti:
+                case Esame.Programmazione1:
+                case Esame.Programmazione2:
+                    /*con il TryParse e' possibile provare a convertire la stringa in intero. Se non riesce `voto` resta a 0.
+                    Dal momento che `input` non è numero solo quando si è insufficienti, ritirati o assenti e' ok*/
+                    int.TryParse(input, out voto);
                     break;
             }
 
