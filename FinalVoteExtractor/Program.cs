@@ -11,6 +11,7 @@ namespace FinalVoteExtractor {
             Fondamenti,
             Programmazione1,
             Programmazione2,
+            Algoritmi,
             Count
         }
 
@@ -102,6 +103,13 @@ namespace FinalVoteExtractor {
                     /*con il TryParse e' possibile provare a convertire la stringa in intero. Se non riesce `voto` resta a 0.
                     Dal momento che `input` non è numero solo quando si è insufficienti, ritirati o assenti e' ok*/
                     int.TryParse(input, out voto);
+                    break;
+                case Esame.Algoritmi:
+                    if (input.Equals("30 LODE")) {
+                        voto = 31;
+                    } else {
+                        int.TryParse(input, out voto);
+                    }
                     break;
             }
 
