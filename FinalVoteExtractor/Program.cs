@@ -86,6 +86,11 @@ namespace FinalVoteExtractor {
                 case Esame.AlgebraLineare:
                     if (input.Equals("30L")) {
                         voto = 31;
+                    } else {
+                        voto = int.Parse(input);
+
+                        if (voto < 18) //messo per standard, se e' insufficiente associo lo 0
+                            voto = 0;
                     }
                     break;
             }
