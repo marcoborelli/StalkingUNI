@@ -14,11 +14,12 @@ Non tutti gli esami hanno lo stesso modo per rappresentare il voto finale (`-` i
 |                   |Lode   | Sufficienza                       |Insufficienza         |
 |-------------------|-------|-----------------------------------|----------------------|
 |**AlgebraLineare** |`'30L'`|`'<voto>'`                         |`'<voto>'`            |
-|**Analisi1**       |-      |`'Esame superato con <voto> su 30' || ''Esame scritto superato con <voto> su 30'`|`'Parte I insufficiente' || 'Compito insufficiente' || 'Assente' || 'Ritirato'`|
+|**Analisi1**       |-      |`'Esame superato con \<voto\> su 30' \|\| ''Esame scritto superato con \<voto\> su 30'`|`'Parte I insufficiente' \|\| 'Compito insufficiente' \|\| 'Assente' \|\| 'Ritirato'`|
 |**Architettura**   |-      |-                                  |-                     |
 |**Fondamenti**     |-      |`'<voto>'`                         |`'INS'`               |
 |**Programmazione1**|-      |`'<voto>'`                         |`''`                  |
-|**Programmazione2**|`'31'` |`'<voto>'`                         |`'Insuff' || 'compitini non svolti'`|
-|**Algoritmi**      |`'30 LODE'`|`'<voto>'`                     |`'RIT' || 'INS' || 'REC I' || 'REC II'`|
+|**Programmazione2**|`'31'` |`'<voto>'`                         |`'Insuff' \|\| 'compitini non svolti'`|
+|**Algoritmi**      |`'30 LODE'`|`'<voto>'`                     |`'RIT' \|\| 'INS' \|\| 'REC I' \|\| 'REC II'`|
+
 
 
