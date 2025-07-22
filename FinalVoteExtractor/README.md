@@ -1,6 +1,7 @@
 # FinalVoteExtractor
 
-Dato in input un file `.csv` contenente tutte le valutazioni di tutti gli appelli di un dato esame, il programma restituisce in output un documento dello stesso tipo di quello in input, contenente, in caso di multiple occorrenze di una matricola, solamente la valutazione più recente
+Dato in input un file `.csv` contenente tutte le valutazioni di tutti gli appelli di un dato esame, il programma restituisce in output un documento dello stesso tipo di quello in input, contenente, in caso di multiple occorrenze di una matricola, solamente la valutazione più recente.\
+Per come è scritto il programma **non** è possibile fornire in input un file già elaborato in precedenza a cui si vuole aggiungere una nuova parte in append. Il file di output viene infatti sempre sovrascritto per intero.
 
 ## Struttura file `.csv`
 
