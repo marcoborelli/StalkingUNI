@@ -12,6 +12,7 @@ namespace FinalVoteExtractor {
             Programmazione1,
             Programmazione2,
             Algoritmi,
+            ArchitetturaElaboratori,
             Count
         }
 
@@ -99,6 +100,7 @@ namespace FinalVoteExtractor {
                 case Esame.Fondamenti:
                 case Esame.Programmazione1:
                 case Esame.Programmazione2:
+                case Esame.ArchitetturaElaboratori:
                     /*con il TryParse e' possibile provare a convertire la stringa in intero. Se non riesce `voto` resta a 0.
                     Dal momento che `input` non è numero solo quando si è insufficienti, ritirati o assenti e' ok*/
                     int.TryParse(input, out voto);
