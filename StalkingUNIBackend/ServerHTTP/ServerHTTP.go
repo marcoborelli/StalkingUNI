@@ -15,7 +15,7 @@ const endpoint_student = "/getStudent"
 const endpoint_voti = "/getVoti"
 
 func StartServer(port string) {
-	matricole_nome_folder = os.Getenv("MATRICOLE_NOME_FOLDER") + "__.csv"
+	matricole_nome_file = os.Getenv("MATRICOLE_NOME_FILE")
 	matricole_voti_folder = os.Getenv("MATRICOLE_VOTI_FOLDER")
 
 	http.HandleFunc("/", handlerGeneric)
@@ -23,7 +23,6 @@ func StartServer(port string) {
 	http.HandleFunc(endpoint_voti, handlerFindExamesVotes)
 
 	http.ListenAndServe(port, nil)
-	fmt.Println("uwu")
 }
 
 func handlerFindStudent(w http.ResponseWriter, r *http.Request) {
@@ -35,10 +34,10 @@ func handlerFindStudent(w http.ResponseWriter, r *http.Request) {
 	nome := query.Get("nome")
 
 	if query.Has("matricola") {
-		ris := CSVManager.GetNomeCognome(matricole_nome_folder, matricola)
+		ris := CSVManager.GetNomeCognome(matricole_nome_file, matricola)
 		fmt.Fprint(w, JSONManager.StructUserToJSON(ris))
 	} else {
-		ris := CSVManager.GetMatricola(matricole_nome_folder, cognome, nome)
+		ris := CSVManager.GetMatricola(matricole_nome_file, cognome, nome)
 
 		//creazione array JSON
 		json_string_arr := "["
