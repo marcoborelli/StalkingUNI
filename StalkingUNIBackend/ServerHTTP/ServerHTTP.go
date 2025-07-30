@@ -9,20 +9,21 @@ import (
 	"github.com/marcoborelli/StalkingUNI/JSONManager"
 )
 
-var matricole_nome_folder, matricole_voti_folder string
+var matricole_nome_file, matricole_voti_folder, server_port string
 
 const endpoint_student = "/getStudent"
 const endpoint_voti = "/getVoti"
 
-func StartServer(port string) {
+func StartServer() {
 	matricole_nome_file = os.Getenv("MATRICOLE_NOME_FILE")
 	matricole_voti_folder = os.Getenv("MATRICOLE_VOTI_FOLDER")
+	server_port = os.Getenv("HTTP_SERVER_PORT")
 
 	http.HandleFunc("/", handlerGeneric)
 	http.HandleFunc(endpoint_student, handlerFindStudent)
 	http.HandleFunc(endpoint_voti, handlerFindExamesVotes)
 
-	http.ListenAndServe(port, nil)
+	http.ListenAndServe(server_port, nil)
 }
 
 func handlerFindStudent(w http.ResponseWriter, r *http.Request) {

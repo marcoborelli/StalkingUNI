@@ -15,5 +15,5 @@ func main() {
 		fmt.Println(err)
 	}
 
-	ServerHTTP.StartServer(":8080")
+	ServerHTTP.StartServer()
 }
