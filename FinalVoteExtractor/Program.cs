@@ -23,6 +23,19 @@ namespace FinalVoteExtractor {
             Count
         }
 
+        public enum CSVField {
+            Matricola,
+            Voto,
+            Count
+        }
+
+        public enum CSVFieldVoto {
+            Data,
+            TipoAppello, //C = completo, P = parziale, R = recupero (del parziale)
+            Voto,
+            Count
+        }
+
         const char CSVFieldSeparator = ';';
         const char CSVVoteSeparator = ',';
         const char CSVVoteFieldSeparator = '_';
@@ -65,13 +78,13 @@ namespace FinalVoteExtractor {
                 sr.ReadLine(); //salto l'intestazione
                 while ((line = sr.ReadLine()) != null) {
                     string[] fields = line.Split(CSVFieldSeparator);
-                    int mat = int.Parse(fields[0]);
+                    int mat = int.Parse(fields[(int)CSVField.Matricola]);
 
-                    //GG-MM-AAAA_TIPOESAME_VOTO
-                    string[] fieldsVoto = fields[1].Split(CSVVoteFieldSeparator);
-                    string dataEsame = fieldsVoto[0];
-                    string tipoAppello = fieldsVoto[1];
-                    string votoEsame = fieldsVoto[2];
+
+                    string[] fieldsVoto = fields[(int)CSVField.Voto].Split(CSVVoteFieldSeparator);
+                    string dataEsame = fieldsVoto[(int)CSVFieldVoto.Data];
+                    string tipoAppello = fieldsVoto[(int)CSVFieldVoto.TipoAppello];
+                    string votoEsame = fieldsVoto[(int)CSVFieldVoto.Voto];
 
 
                     int voto = GetVoto(votoEsame, materiaEsame);
