@@ -78,7 +78,7 @@ namespace FinalVoteExtractor {
                 sr.ReadLine(); //salto l'intestazione
                 while ((line = sr.ReadLine()) != null) {
                     string[] fields = line.Split(CSVFieldSeparator);
-                    string mat = fields[(int)CSVField.Matricola];
+                    string mat = fields[(int)CSVField.Matricola].PadLeft(6, '0');
 
 
                     string[] fieldsVoto = fields[(int)CSVField.Voto].Split(CSVVoteFieldSeparator);
