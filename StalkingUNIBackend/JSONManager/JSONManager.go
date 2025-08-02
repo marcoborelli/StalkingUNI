@@ -15,11 +15,11 @@ func StructUserToJSON(input CSVManager.Studente) (res string) {
 	}
 
 	res = string(bytes[:])
-	fmt.Println(res)
+	//fmt.Println(res)
 	return
 }
 
-func MapEsamiToJSON(input map[string]int) (res string) {
+func MapEsamiToJSON(input map[string][]CSVManager.Voto) (res string) {
 	bytes, err := json.Marshal(input)
 
 	if err != nil {
@@ -27,6 +27,6 @@ func MapEsamiToJSON(input map[string]int) (res string) {
 	}
 
 	res = string(bytes[:])
-	fmt.Println(res)
+	//fmt.Println(res)
 	return
 }

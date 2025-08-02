@@ -6,12 +6,19 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Studente struct {
 	Matricola string
 	Cognome   string
 	Nome      string
+}
+
+type Voto struct {
+	Data      time.Time
+	TipoEsame string
+	Voto      int
 }
 
 func GetNomeCognome(filepath, matricola string) (studente Studente) {
@@ -87,13 +94,13 @@ func GetMatricola(filepath, cognome, nome string) (studenti []Studente) {
 	return
 }
 
-func GetVoti(dirpath, matricola string) (voti map[string]int) {
+func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 	data, err := (os.ReadDir(dirpath)) //la cartella letta contiene sottocartelle, ognuna per ogni materia
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	voti = make(map[string]int)
+	voti = make(map[string][]Voto)
 
 	for _, elem := range data {
 		//ogni sottocaretella contiene un file .csv con lo stesso nome della directory in cui e' contenuto
@@ -113,13 +120,19 @@ func GetVoti(dirpath, matricola string) (voti map[string]int) {
 			fields := strings.Split(line, ";")
 
 			if fields[0] == matricola {
-				ris, err := strconv.Atoi(fields[1])
-				if err != nil {
-					fmt.Println(err)
-					voti[elem.Name()] = -1
-				} else {
-					voti[elem.Name()] = ris
+				votiPresi := strings.Split(fields[1], ",")
+
+				for _, votoPreso := range votiPresi {
+					fieldsVoto := strings.Split(votoPreso, "_")
+
+					data := parseStringTime(fieldsVoto[0])
+					tipoEsame := fieldsVoto[1]
+					voto, _ := strconv.Atoi(fieldsVoto[2])
+
+					tmp := Voto{Data: data, TipoEsame: tipoEsame, Voto: voto}
+					voti[elem.Name()] = append(voti[elem.Name()], tmp)
 				}
+
 				break
 			}
 		}
@@ -128,9 +141,23 @@ func GetVoti(dirpath, matricola string) (voti map[string]int) {
 			fmt.Println(err)
 		} else if _, ok := voti[elem.Name()]; !ok {
 			//se sono qui non esiste la chiave -> l'esame non e' stato sostenuto
-			voti[elem.Name()] = -1
+			voti[elem.Name()] = nil
 		}
 	}
 
+	return
+}
+
+func parseStringTime(input string) (res time.Time) { // TODO: controllo errori
+	fields := strings.Split(input, "-")
+
+	anno, _ := strconv.Atoi(fields[2])
+	tmp, _ := strconv.Atoi(fields[1])
+	mese := time.Month(tmp)
+	giorno, _ := strconv.Atoi(fields[0])
+
+	//fmt.Printf("stringa:'%s'\ngiorno: %d, mese: %s, anno: %d\n\n", input, giorno, mese, anno)
+
+	res = time.Date(anno, mese, giorno, 0, 0, 0, 0, time.UTC)
 	return
 }
