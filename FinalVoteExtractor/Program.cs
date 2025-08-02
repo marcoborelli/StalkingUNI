@@ -70,7 +70,7 @@ namespace FinalVoteExtractor {
                 throw new Exception("Wrong input file path");
             }
 
-            Dictionary<int, string> mat_voto = new Dictionary<int, string>();
+            Dictionary<string, string> mat_voto = new Dictionary<string, string>();
 
 
             string line = "";
@@ -78,7 +78,7 @@ namespace FinalVoteExtractor {
                 sr.ReadLine(); //salto l'intestazione
                 while ((line = sr.ReadLine()) != null) {
                     string[] fields = line.Split(CSVFieldSeparator);
-                    int mat = int.Parse(fields[(int)CSVField.Matricola]);
+                    string mat = fields[(int)CSVField.Matricola];
 
 
                     string[] fieldsVoto = fields[(int)CSVField.Voto].Split(CSVVoteFieldSeparator);
@@ -103,7 +103,7 @@ namespace FinalVoteExtractor {
 
 
             using (StreamWriter sw = new StreamWriter(args[(int)ProgParam.OutputFilename])) {
-                foreach (KeyValuePair<int, string> kvp in mat_voto) {
+                foreach (KeyValuePair<string, string> kvp in mat_voto) {
                     sw.WriteLine($"{kvp.Key}{CSVFieldSeparator}{kvp.Value}");
                 }
             }
