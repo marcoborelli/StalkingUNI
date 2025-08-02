@@ -10,6 +10,14 @@ namespace StudentsMerge {
             Count
         }
 
+        public enum CSVField {
+            Matricola,
+            Cognome,
+            Nome
+        }
+
+        const char CSVFieldSeparator = ';';
+
         public static void Main(string[] args) {
             if (args.Length != (int)Params.Count) {
                 Console.Write($"Error. Usage: ./programma ");
@@ -41,10 +49,10 @@ namespace StudentsMerge {
             using (StreamReader sr = new StreamReader(args[(int)Params.NewDataFilename])) {
                 sr.ReadLine(); //salto l'intestazione
                 while ((line = sr.ReadLine()) != null) {
-                    string[] fields = line.Split(';');
-                    int mat = int.Parse(fields[0]);
+                    string[] fields = line.Split(CSVFieldSeparator);
+                    int mat = int.Parse(fields[(int)CSVField.Matricola]);
 
-                    mat_cognomeNome[mat] = $"{fields[1]};{fields[2]}";
+                    mat_cognomeNome[mat] = $"{fields[(int)CSVField.Cognome]}{CSVFieldSeparator}{fields[(int)CSVField.Nome]}";
                 }
             }
 
@@ -52,8 +60,8 @@ namespace StudentsMerge {
             //rimuovo dal dizionario i valori che gia' esistono all'interno del file originale
             using (StreamReader sr = new StreamReader(args[(int)Params.OrigFilename])) {
                 while ((line = sr.ReadLine()) != null) {
-                    string[] fields = line.Split(';');
-                    int mat = int.Parse(fields[0]);
+                    string[] fields = line.Split(CSVFieldSeparator);
+                    int mat = int.Parse(fields[(int)CSVField.Matricola]);
 
                     //se la chiave non esiste nella collezione, la funziona ritorna emplicemnte false
                     mat_cognomeNome.Remove(mat);
@@ -64,7 +72,7 @@ namespace StudentsMerge {
             //i valori restanti nel dizionario sono quelli da aggiungere in append al file originale
             using (StreamWriter sw = new StreamWriter(args[(int)Params.OrigFilename], true)) {
                 foreach (KeyValuePair<int, string> kvp in mat_cognomeNome) {
-                    sw.WriteLine($"{kvp.Key};{kvp.Value}");
+                    sw.WriteLine($"{kvp.Key}{CSVFieldSeparator}{kvp.Value}");
                 }
             }
         }
