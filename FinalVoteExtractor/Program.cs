@@ -53,7 +53,7 @@ namespace FinalVoteExtractor {
                 throw new Exception("Wrong input file path");
             }
 
-            Dictionary<int, int> mat_voto = new Dictionary<int, int>();
+            Dictionary<int, string> mat_voto = new Dictionary<int, string>();
 
 
             string line = "";
@@ -62,12 +62,23 @@ namespace FinalVoteExtractor {
                 while ((line = sr.ReadLine()) != null) {
                     string[] fields = line.Split(';');
                     int mat = int.Parse(fields[0]);
-                    int voto = GetVoto(fields[1], tipoEsame);
 
-                    /*usando mat_voto[mat] = voto e non la mat_voto.Add(mat, voto) assicuro che se la matricola gia' esiste il valore venga sovrascritto col nuovo
-                    Con la .Add genererebbe eccezione*/
+                    //GG-MM-AAAA_TIPOESAME_VOTO
+                    string[] fieldsVoto = fields[1].Split('_');
+                    string dataEsame = fieldsVoto[0];
+                    string tipoAppello = fieldsVoto[1];
+                    string votoEsame = fieldsVoto[2];
 
-                    mat_voto[mat] = voto;
+
+                    int voto = GetVoto(votoEsame, tipoEsame);
+
+
+                    if (mat_voto.ContainsKey(mat))
+                        mat_voto[mat] += ",";
+                    else
+                        mat_voto[mat] = "";
+
+                    mat_voto[mat] += $"{dataEsame}_{tipoAppello}_{voto}";
                 }
             }
 
@@ -75,7 +86,7 @@ namespace FinalVoteExtractor {
 
 
             using (StreamWriter sw = new StreamWriter(args[(int)Params.OutputFilename])) {
-                foreach (KeyValuePair<int, int> kvp in mat_voto) {
+                foreach (KeyValuePair<int, string> kvp in mat_voto) {
                     sw.WriteLine($"{kvp.Key};{kvp.Value}");
                 }
             }
