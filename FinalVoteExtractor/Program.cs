@@ -23,6 +23,10 @@ namespace FinalVoteExtractor {
             Count
         }
 
+        const char CSVFieldSeparator = ';';
+        const char CSVVoteSeparator = ',';
+        const char CSVVoteFieldSeparator = '_';
+
         public static void Main(string[] args) {
             if (args.Length != (int)ProgParam.Count) {
                 Console.Write("Error. Usage: ./programma ");
@@ -60,11 +64,11 @@ namespace FinalVoteExtractor {
             using (StreamReader sr = new StreamReader(args[(int)ProgParam.InputFilename])) {
                 sr.ReadLine(); //salto l'intestazione
                 while ((line = sr.ReadLine()) != null) {
-                    string[] fields = line.Split(';');
+                    string[] fields = line.Split(CSVFieldSeparator);
                     int mat = int.Parse(fields[0]);
 
                     //GG-MM-AAAA_TIPOESAME_VOTO
-                    string[] fieldsVoto = fields[1].Split('_');
+                    string[] fieldsVoto = fields[1].Split(CSVVoteFieldSeparator);
                     string dataEsame = fieldsVoto[0];
                     string tipoAppello = fieldsVoto[1];
                     string votoEsame = fieldsVoto[2];
@@ -74,11 +78,11 @@ namespace FinalVoteExtractor {
 
 
                     if (mat_voto.ContainsKey(mat))
-                        mat_voto[mat] += ",";
+                        mat_voto[mat] += CSVVoteSeparator;
                     else
                         mat_voto[mat] = "";
 
-                    mat_voto[mat] += $"{dataEsame}_{tipoAppello}_{voto}";
+                    mat_voto[mat] += $"{dataEsame}{CSVVoteFieldSeparator}{tipoAppello}{CSVVoteFieldSeparator}{voto}";
                 }
             }
 
@@ -87,7 +91,7 @@ namespace FinalVoteExtractor {
 
             using (StreamWriter sw = new StreamWriter(args[(int)ProgParam.OutputFilename])) {
                 foreach (KeyValuePair<int, string> kvp in mat_voto) {
-                    sw.WriteLine($"{kvp.Key};{kvp.Value}");
+                    sw.WriteLine($"{kvp.Key}{CSVFieldSeparator}{kvp.Value}");
                 }
             }
 
