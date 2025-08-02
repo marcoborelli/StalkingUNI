@@ -16,7 +16,7 @@ namespace FinalVoteExtractor {
             Count
         }
 
-        public enum Params {
+        public enum ProgParam {
             InputFilename,
             OutputFilename,
             ExameTypeNumber,
@@ -24,10 +24,10 @@ namespace FinalVoteExtractor {
         }
 
         public static void Main(string[] args) {
-            if (args.Length != (int)Params.Count) {
+            if (args.Length != (int)ProgParam.Count) {
                 Console.Write("Error. Usage: ./programma ");
-                for (byte i = 0; i < (byte)Params.Count; i++) {
-                    Console.Write($"<{Enum.GetName(typeof(Params), i)}> ");
+                for (byte i = 0; i < (byte)ProgParam.Count; i++) {
+                    Console.Write($"<{Enum.GetName(typeof(ProgParam), i)}> ");
                 }
                 Console.WriteLine("\n");
 
@@ -40,16 +40,16 @@ namespace FinalVoteExtractor {
             }
 
 
-            Esame tipoEsame;
+            Esame materiaEsame;
 
-            if (int.TryParse(args[(int)Params.ExameTypeNumber], out int num) && Enum.IsDefined(typeof(Esame), num)) {
-                    tipoEsame = (Esame)num;
+            if (int.TryParse(args[(int)ProgParam.ExameTypeNumber], out int num) && Enum.IsDefined(typeof(Esame), num)) {
+                    materiaEsame = (Esame)num;
             } else {
                 throw new Exception("Wrong input enum. Call the program without parameters to see the enum list");
             }
 
 
-            if (!File.Exists(args[(int)Params.InputFilename])) {
+            if (!File.Exists(args[(int)ProgParam.InputFilename])) {
                 throw new Exception("Wrong input file path");
             }
 
@@ -57,7 +57,7 @@ namespace FinalVoteExtractor {
 
 
             string line = "";
-            using (StreamReader sr = new StreamReader(args[(int)Params.InputFilename])) {
+            using (StreamReader sr = new StreamReader(args[(int)ProgParam.InputFilename])) {
                 sr.ReadLine(); //salto l'intestazione
                 while ((line = sr.ReadLine()) != null) {
                     string[] fields = line.Split(';');
@@ -70,7 +70,7 @@ namespace FinalVoteExtractor {
                     string votoEsame = fieldsVoto[2];
 
 
-                    int voto = GetVoto(votoEsame, tipoEsame);
+                    int voto = GetVoto(votoEsame, materiaEsame);
 
 
                     if (mat_voto.ContainsKey(mat))
@@ -85,7 +85,7 @@ namespace FinalVoteExtractor {
             //Console.WriteLine(mat_voto[928561]);
 
 
-            using (StreamWriter sw = new StreamWriter(args[(int)Params.OutputFilename])) {
+            using (StreamWriter sw = new StreamWriter(args[(int)ProgParam.OutputFilename])) {
                 foreach (KeyValuePair<int, string> kvp in mat_voto) {
                     sw.WriteLine($"{kvp.Key};{kvp.Value}");
                 }
