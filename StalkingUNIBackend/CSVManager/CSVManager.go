@@ -3,6 +3,7 @@ package CSVManager
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -27,6 +28,8 @@ func GetNomeCognome(filepath, matricola string) (studente Studente) {
 
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
+		return
 	}
 
 	defer file.Close()
@@ -47,6 +50,7 @@ func GetNomeCognome(filepath, matricola string) (studente Studente) {
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println(err)
+		logError(err.Error())
 	}
 
 	return
@@ -64,6 +68,8 @@ func GetMatricola(filepath, cognome, nome string) (studenti []Studente) {
 
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
+		return
 	}
 
 	defer file.Close()
@@ -90,6 +96,7 @@ func GetMatricola(filepath, cognome, nome string) (studenti []Studente) {
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println(err)
+		logError(err.Error())
 	}
 
 	return
@@ -99,6 +106,8 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 	data, err := (os.ReadDir(dirpath)) //la cartella letta contiene sottocartelle, ognuna per ogni materia
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
+		return
 	}
 
 	voti = make(map[string][]Voto)
@@ -110,6 +119,8 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 
 		if err != nil {
 			fmt.Println(err)
+			logError(err.Error())
+			return
 		}
 
 		defer file.Close()
@@ -141,6 +152,7 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 
 		if err := scanner.Err(); err != nil {
 			fmt.Println(err)
+			logError(err.Error())
 		} else if _, ok := voti[nome_materia]; !ok {
 			//se sono qui non esiste la chiave -> l'esame non e' stato sostenuto
 			voti[nome_materia] = nil
@@ -156,12 +168,14 @@ func parseStringTime(input string) (res time.Time) {
 	anno, err := strconv.Atoi(fields[2])
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
 		return
 	}
 
 	tmp, err := strconv.Atoi(fields[1])
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
 		return
 	}
 	mese := time.Month(tmp)
@@ -169,6 +183,7 @@ func parseStringTime(input string) (res time.Time) {
 	giorno, err := strconv.Atoi(fields[0])
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
 		return
 	}
 
@@ -176,4 +191,8 @@ func parseStringTime(input string) (res time.Time) {
 
 	res = time.Date(anno, mese, giorno, 0, 0, 0, 0, time.UTC)
 	return
+}
+
+func logError(message string) {
+	log.Printf("Error: '%s'", message)
 }

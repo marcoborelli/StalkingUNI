@@ -3,6 +3,7 @@ package JSONManager
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/marcoborelli/StalkingUNI/CSVManager"
 )
@@ -12,6 +13,7 @@ func StructUserToJSON(input CSVManager.Studente) (res string) {
 
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
 	}
 
 	res = string(bytes[:])
@@ -24,9 +26,14 @@ func MapEsamiToJSON(input map[string][]CSVManager.Voto) (res string) {
 
 	if err != nil {
 		fmt.Println(err)
+		logError(err.Error())
 	}
 
 	res = string(bytes[:])
 	//fmt.Println(res)
 	return
+}
+
+func logError(message string) {
+	log.Printf("Error: '%s'", message)
 }

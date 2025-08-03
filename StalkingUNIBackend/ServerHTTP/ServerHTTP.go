@@ -2,6 +2,7 @@ package ServerHTTP
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -27,6 +28,7 @@ func StartServer() {
 }
 
 func handlerFindStudent(w http.ResponseWriter, r *http.Request) {
+	logs(r)
 	w.Header().Set("Content-Type", "application/json")
 	query := r.URL.Query()
 
@@ -56,6 +58,7 @@ func handlerFindStudent(w http.ResponseWriter, r *http.Request) {
 }
 
 func handlerFindExamesVotes(w http.ResponseWriter, r *http.Request) {
+	logs(r)
 	w.Header().Set("Content-Type", "application/json")
 	matricola := r.URL.Query().Get("matricola")
 
@@ -65,4 +68,8 @@ func handlerFindExamesVotes(w http.ResponseWriter, r *http.Request) {
 
 func handlerGeneric(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Gli endpoint sono: '%s', '%s'.\nValori della query: matricola, nome, cognome", endpoint_student, endpoint_voti)
+}
+
+func logs(r *http.Request) {
+	log.Printf("New request to: '%s' by: '%s'\n", r.URL, r.RemoteAddr)
 }
