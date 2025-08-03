@@ -74,6 +74,7 @@ func GetMatricola(filepath, cognome, nome string) (studenti []Studente) {
 		line := scanner.Text()
 
 		fields := strings.Split(line, ";")
+
 		for i := 1; i < len(fields); i++ {
 			fields[i] = strings.ToUpper(fields[i])
 		}
@@ -104,7 +105,8 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 
 	for _, elem := range data {
 		//ogni sottocaretella contiene un file .csv con lo stesso nome della directory in cui e' contenuto
-		file, err := os.Open(dirpath + elem.Name() + string(os.PathSeparator) + elem.Name() + ".csv")
+		nome_materia := elem.Name()
+		file, err := os.Open(dirpath + nome_materia + string(os.PathSeparator) + nome_materia + ".csv")
 
 		if err != nil {
 			fmt.Println(err)
@@ -130,7 +132,7 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 					voto, _ := strconv.Atoi(fieldsVoto[2])
 
 					tmp := Voto{Data: data, TipoEsame: tipoEsame, Voto: voto}
-					voti[elem.Name()] = append(voti[elem.Name()], tmp)
+					voti[nome_materia] = append(voti[nome_materia], tmp)
 				}
 
 				break
@@ -139,22 +141,36 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 
 		if err := scanner.Err(); err != nil {
 			fmt.Println(err)
-		} else if _, ok := voti[elem.Name()]; !ok {
+		} else if _, ok := voti[nome_materia]; !ok {
 			//se sono qui non esiste la chiave -> l'esame non e' stato sostenuto
-			voti[elem.Name()] = nil
+			voti[nome_materia] = nil
 		}
 	}
 
 	return
 }
 
-func parseStringTime(input string) (res time.Time) { // TODO: controllo errori
+func parseStringTime(input string) (res time.Time) {
 	fields := strings.Split(input, "-")
 
-	anno, _ := strconv.Atoi(fields[2])
-	tmp, _ := strconv.Atoi(fields[1])
+	anno, err := strconv.Atoi(fields[2])
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	tmp, err := strconv.Atoi(fields[1])
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	mese := time.Month(tmp)
-	giorno, _ := strconv.Atoi(fields[0])
+
+	giorno, err := strconv.Atoi(fields[0])
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	//fmt.Printf("stringa:'%s'\ngiorno: %d, mese: %s, anno: %d\n\n", input, giorno, mese, anno)
 
