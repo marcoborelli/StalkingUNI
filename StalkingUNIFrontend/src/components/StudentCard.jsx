@@ -4,6 +4,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom'
 
 
 export default function StudentCard({ matricola, name, surname }) {
@@ -17,7 +18,9 @@ export default function StudentCard({ matricola, name, surname }) {
           <Typography sx={{ color: 'text.secondary' }}>Cognome: {surname}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" href={`/user/${matricola}`}>Apri profilo</Button>
+          <Link to={`/user/${matricola}`}>
+            <Button size="small">Apri profilo</Button>
+          </Link>
         </CardActions>
       </Card>
     </Box>
