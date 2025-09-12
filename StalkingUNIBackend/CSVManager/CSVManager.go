@@ -135,7 +135,9 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 			if fields[0] == matricola {
 				votiPresi := strings.Split(fields[1], ",")
 
-				for _, votoPreso := range votiPresi {
+				for i := len(votiPresi) - 1; i >= 0; i-- {
+					votoPreso := votiPresi[i]
+
 					fieldsVoto := strings.Split(votoPreso, "_")
 
 					data := parseStringTime(fieldsVoto[0])
