@@ -42,16 +42,26 @@ func handlerFindStudent(w http.ResponseWriter, r *http.Request) {
 	} else {
 		ris := CSVManager.GetMatricola(matricole_nome_file, cognome, nome)
 
-		//Ci possono essere piu' studenti con lo stesso nome, quindi: creazione array JSON
-		json_string_arr := "["
-		for i, elem := range ris {
-			json_string_arr += JSONManager.StructUserToJSON(elem)
+		/*la funzione GetMatricola restituisce un array
+		ma StructUserToJSON prende in input singoli elementi, quindi:
+		1. se GetMatricola ha restituito un array da un solo elemento viene ritornato un oggetto
+		2. se GetMatricola ha retituito un array con piu' elementi,
+		   si cicla sui singoli e l'array ([,,]) viene costruito a mano all'interno del ciclo*/
 
-			if i != len(ris)-1 {
-				json_string_arr += ", "
+		json_string_arr := ""
+		if len(ris) == 1 {
+			json_string_arr = JSONManager.StructUserToJSON(ris[0])
+		} else {
+			json_string_arr = "["
+			for i, elem := range ris {
+				json_string_arr += JSONManager.StructUserToJSON(elem)
+
+				if i != len(ris)-1 {
+					json_string_arr += ", "
+				}
 			}
+			json_string_arr += "]"
 		}
-		json_string_arr += "]"
 
 		fmt.Fprint(w, json_string_arr)
 	}
