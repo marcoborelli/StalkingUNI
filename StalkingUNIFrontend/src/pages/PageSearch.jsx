@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 import StudentCard from '../components/StudentCard'
 import Searchbar from '../components/Searchbar'
@@ -15,6 +16,18 @@ export default function ResponsiveGrid() {
       <Grid container>
         <Grid size={12} sx={{ position: 'sticky', top: 10, backgroundColor: 'white', zIndex: 10 }}>
           <Searchbar updateSearchResult={setStudents} />
+          {(!student || student.length == 0) &&
+            <Typography variant="body">
+              <br />
+              I dati presenti sono frutto di elaborazioni effettuate su file rilasciati pubblicamente dai docenti del DISCO.
+              <br />
+              I voti potrebbero non corrispondere sempre a realtà:
+              <ol>
+                <li>Non tutti i risultati di tutti gli esami sono stati resi pubblici</li>
+                <li>I file non tengono conto di eventuali integrazioni (orali supplementari, ad esempio)</li>
+              </ol>
+              Si precisa, inoltre, che non è presente per tutti gli studenti l'associazione nome-matricola
+            </Typography>}
         </Grid>
         <Grid container size={12} sx={{ paddingTop: '3ch' }} spacing={{ xs: 2, sm: 2, md: 2, lg: 3, xl: 4 }}>
           {(student && !Array.isArray(student)) && <Navigate to={`/user/${student.Matricola}`} />}
