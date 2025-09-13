@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
@@ -16,7 +17,8 @@ export default function ResponsiveGrid() {
           <Searchbar updateSearchResult={setStudents} />
         </Grid>
         <Grid container size={12} sx={{ paddingTop: '3ch' }} spacing={{ xs: 2, sm: 2, md: 2, lg: 3, xl: 4 }}>
-          {Array.isArray(student) && /*TODO: implementare il rederict diretto nel caso la ricerca abbia prodotto un solo studente*/
+          {(student && !Array.isArray(student)) && <Navigate to={`/user/${student.Matricola}`} />}
+          {Array.isArray(student) &&
             student.map((elem, index) => (
               <Grid key={index} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <StudentCard
