@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom'
+
 import TableEsami from '../components/TableEsami'
 import api from '../utilities/api'
 
@@ -21,7 +24,7 @@ export default function BasicGrid() {
         } catch (error) {
           console.error('Error fetching user data:', error)
         }
-        
+
         try {
           const response = await api.get(`/getStudent?matricola=${matricola}`)
           console.log(response.data)
@@ -42,6 +45,9 @@ export default function BasicGrid() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <Link to={`/search`}>
+            <Button size="small">Torna indietro</Button>
+          </Link>
       <Grid container spacing={2}>
         <Grid size={12}>
           <Typography variant="h6" component="div"> {userData.Nome} {userData.Cognome} {`MAT. ${userData.Matricola}`}</Typography>
