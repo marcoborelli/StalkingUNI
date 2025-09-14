@@ -10,7 +10,8 @@ export default defineConfig(() => {
     base: env.VITE_PUBLIC_URL_BASE_PATH,
     server: {
       host: '0.0.0.0',
-      port: parseInt(env.VITE_PORT)
+      port: parseInt(env.VITE_PORT),
+      allowedHosts: ['serverborelli.duckdns.org'],
     }
   }
 })
