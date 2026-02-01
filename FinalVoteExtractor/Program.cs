@@ -19,7 +19,7 @@ namespace FinalVoteExtractor {
 
         public enum CSVFieldVoto {
             Data,
-            TipoAppello, //C = completo, P = parziale, R = recupero (del parziale)
+            TipoAppello, // C = completo, P = parziale, R = recupero (del parziale)
             Voto,
             Count
         }
@@ -123,17 +123,17 @@ namespace FinalVoteExtractor {
                     } else {
                         voto = int.Parse(input);
 
-                        if (voto < 18) //messo per standard, se e' insufficiente associo lo 0
+                        if (voto < 18) { // messo per standard, se e' insufficiente associo lo 0
                             voto = 0;
-
+                        }
                     }
                     break;
                 case "Fondamenti":
                 case "Programmazione1":
                 case "Programmazione2":
                 case "Architettura":
-                    /*con il TryParse e' possibile provare a convertire la stringa in intero. Se non riesce `voto` resta a 0.
-                    Dal momento che `input` non è numero solo quando si è insufficienti, ritirati o assenti e' ok*/
+                    /* se TryParse fallisce -> voto = 0.
+                    Dato che `input` non è numero solo quando si è insufficienti, ritirati o assenti e' ok */
                     int.TryParse(input, out voto);
                     break;
                 case "Algoritmi":
