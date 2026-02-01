@@ -2,24 +2,13 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace FinalVoteExtractor {
     class MainClass {
-        public enum Esame {
-            Analisi1,
-            AlgebraLineare,
-            Fondamenti,
-            Programmazione1,
-            Programmazione2,
-            Algoritmi,
-            ArchitetturaElaboratori,
-            Count
-        }
-
         public enum ProgParam {
             InputFilename,
             OutputFilename,
-            ExameTypeNumber,
             Count
         }
 
@@ -41,27 +30,32 @@ namespace FinalVoteExtractor {
         const char CSVVoteFieldSeparator = '_';
 
         public static void Main(string[] args) {
+            string[] materie = new string[] {
+                "AlgebraLineare",
+                "Algoritmi",
+                "Analisi1",
+                "Architettura",
+                "Fondamenti",
+                "Programmazione1",
+                "Programmazione2"
+            };
+
             if (args.Length != (int)ProgParam.Count) {
                 Console.Write("Error. Usage: ./programma ");
+
+                //Array.ForEach(Enum.GetNames(typeof(ProgParam)), arg => Console.Write($"<{arg}> "));
                 for (byte i = 0; i < (byte)ProgParam.Count; i++) {
                     Console.Write($"<{Enum.GetName(typeof(ProgParam), i)}> ");
                 }
                 Console.WriteLine("\n");
 
-                Console.WriteLine("The ExameType are: ");
-                for (int i = 0; i < (int)Esame.Count; i++) {
-                    Console.WriteLine($"{i}: {Enum.GetName(typeof(Esame), i)}");
-                }
-
                 throw new Exception("Wrong number of parameters");
             }
 
+            // input: materia_completo.csv, a me serve solo materia
+            string materia = args[(int)ProgParam.InputFilename].Split('_')[0];
 
-            Esame materiaEsame;
-
-            if (int.TryParse(args[(int)ProgParam.ExameTypeNumber], out int num) && Enum.IsDefined(typeof(Esame), num)) {
-                    materiaEsame = (Esame)num;
-            } else {
+            if (!materie.Contains(materia)) {
                 throw new Exception("Wrong input enum. Call the program without parameters to see the enum list");
             }
 
@@ -87,7 +81,7 @@ namespace FinalVoteExtractor {
                     string votoEsame = fieldsVoto[(int)CSVFieldVoto.Voto];
 
 
-                    int voto = GetVoto(votoEsame, materiaEsame);
+                    int voto = GetVoto(votoEsame, materia);
 
 
                     if (mat_voto.ContainsKey(mat))
@@ -111,11 +105,11 @@ namespace FinalVoteExtractor {
 
         }
 
-        public static int GetVoto(string input, Esame tipoEsame) {
+        public static int GetVoto(string input, string materia) {
             int voto = 0;
 
-            switch(tipoEsame) {
-                case Esame.Analisi1:
+            switch(materia) {
+                case "Analisi1":
                     Regex rg = new Regex(@".+\s(?<votoInTrentesimi>\d+).+\s(?<suTrenta>\d)");
                     Match match = rg.Match(input);
 
@@ -124,7 +118,7 @@ namespace FinalVoteExtractor {
                     }
 
                     break;
-                case Esame.AlgebraLineare:
+                case "AlgebraLineare":
                     if (input.Equals("30L")) {
                         voto = 31;
                     } else {
@@ -135,15 +129,15 @@ namespace FinalVoteExtractor {
 
                     }
                     break;
-                case Esame.Fondamenti:
-                case Esame.Programmazione1:
-                case Esame.Programmazione2:
-                case Esame.ArchitetturaElaboratori:
+                case "Fondamenti":
+                case "Programmazione1":
+                case "Programmazione2":
+                case "Architettura":
                     /*con il TryParse e' possibile provare a convertire la stringa in intero. Se non riesce `voto` resta a 0.
                     Dal momento che `input` non è numero solo quando si è insufficienti, ritirati o assenti e' ok*/
                     int.TryParse(input, out voto);
                     break;
-                case Esame.Algoritmi:
+                case "Algoritmi":
                     if (input.Equals("30 LODE")) {
                         voto = 31;
                     } else {
