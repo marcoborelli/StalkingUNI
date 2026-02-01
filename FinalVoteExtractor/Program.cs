@@ -8,7 +8,6 @@ namespace FinalVoteExtractor {
     class MainClass {
         public enum ProgParam {
             InputFilename,
-            OutputFilename,
             Count
         }
 
@@ -96,7 +95,7 @@ namespace FinalVoteExtractor {
             //Console.WriteLine(mat_voto[928561]);
 
 
-            using (StreamWriter sw = new StreamWriter(args[(int)ProgParam.OutputFilename])) {
+            using (StreamWriter sw = new StreamWriter($"{materia}.csv")) {
                 foreach (KeyValuePair<string, string> kvp in mat_voto) {
                     sw.WriteLine($"{kvp.Key}{CSVFieldSeparator}{kvp.Value}");
                 }
