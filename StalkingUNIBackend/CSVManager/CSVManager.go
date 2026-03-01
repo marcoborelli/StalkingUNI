@@ -166,8 +166,9 @@ func GetVoti(dirpath, matricola string) (voti map[string][]Voto) {
 
 func parseStringTime(input string) (res time.Time) {
 	fields := strings.Split(input, "-")
+	// aaaa-mm-gg
 
-	anno, err := strconv.Atoi(fields[2])
+	anno, err := strconv.Atoi(fields[0])
 	if err != nil {
 		fmt.Println(err)
 		logError(err.Error())
@@ -182,7 +183,7 @@ func parseStringTime(input string) (res time.Time) {
 	}
 	mese := time.Month(tmp)
 
-	giorno, err := strconv.Atoi(fields[0])
+	giorno, err := strconv.Atoi(fields[2])
 	if err != nil {
 		fmt.Println(err)
 		logError(err.Error())
