@@ -7,7 +7,7 @@ using System.Linq;
 namespace FinalVoteExtractor {
     class MainClass {
         public enum ProgParam {
-            InputFilename,
+            InputFolder,
             Count
         }
 
@@ -17,10 +17,10 @@ namespace FinalVoteExtractor {
             Count
         }
 
-        public enum CSVFieldVoto {
+        public enum FilenameField {
+            Materia,
             Data,
             TipoAppello, // C = completo, P = parziale, R = recupero (del parziale)
-            Voto,
             Count
         }
 
@@ -28,8 +28,7 @@ namespace FinalVoteExtractor {
         const char CSVVoteSeparator = ',';
         const char CSVVoteFieldSeparator = '_';
 
-        public static void Main(string[] args) {
-            string[] materie = new string[] {
+        static string[] materie = new string[] {
                 "AlgebraLineare",
                 "Algoritmi",
                 "Analisi1",
@@ -37,8 +36,11 @@ namespace FinalVoteExtractor {
                 "Fondamenti",
                 "Programmazione1",
                 "Programmazione2"
-            };
+                };
 
+        const string APPELLI_FOLDER = "SingoliAppelli";
+
+        public static void Main(string[] args) {
             if (args.Length != (int)ProgParam.Count) {
                 Console.Write("Error. Usage: ./programma ");
 
@@ -51,57 +53,77 @@ namespace FinalVoteExtractor {
                 throw new Exception("Wrong number of parameters");
             }
 
-            // input: materia_completo.csv, a me serve solo materia
-            string materia = args[(int)ProgParam.InputFilename].Split('_')[0];
+            string dir_path = args[(int)ProgParam.InputFolder];
 
-            if (!materie.Contains(materia)) {
-                throw new Exception("Wrong input enum. Call the program without parameters to see the enum list");
+            List<string> file_paths = IsDirValid(dir_path);
+            if (file_paths is null) {
+                throw new Exception("La cartella fornita in input non è valida.");
             }
 
-
-            if (!File.Exists(args[(int)ProgParam.InputFilename])) {
-                throw new Exception("Wrong input file path");
-            }
 
             Dictionary<string, string> mat_voto = new Dictionary<string, string>();
 
-
             string line = "";
-            using (StreamReader sr = new StreamReader(args[(int)ProgParam.InputFilename])) {
-                sr.ReadLine(); //salto l'intestazione
-                while ((line = sr.ReadLine()) != null) {
-                    string[] fields = line.Split(CSVFieldSeparator);
-                    string mat = fields[(int)CSVField.Matricola].PadLeft(6, '0');
+            string materia = new DirectoryInfo(dir_path).Name;
+
+            foreach (string file_path in file_paths) {
+                // Replace() senno' nel tipo_appello c'e' anche l'estensione
+                string file_name = Path.GetFileName(file_path).Replace(".csv", "");
+
+                string[] filename_fields = file_name.Split('_');
+                string data_esame = filename_fields[(int)FilenameField.Data];
+                string tipo_appello = filename_fields[(int)FilenameField.TipoAppello];
+
+                using (StreamReader sr = new StreamReader(file_path)) {
+                    while ((line = sr.ReadLine()) != null) {
+                        string[] fields = line.Split(CSVFieldSeparator);
+                        string mat = fields[(int)CSVField.Matricola].PadLeft(6, '0');
+                        string votoEsame = fields[(int)CSVField.Voto];
+
+                        int voto = GetVoto(votoEsame, materia);
 
 
-                    string[] fieldsVoto = fields[(int)CSVField.Voto].Split(CSVVoteFieldSeparator);
-                    string dataEsame = fieldsVoto[(int)CSVFieldVoto.Data];
-                    string tipoAppello = fieldsVoto[(int)CSVFieldVoto.TipoAppello];
-                    string votoEsame = fieldsVoto[(int)CSVFieldVoto.Voto];
-
-
-                    int voto = GetVoto(votoEsame, materia);
-
-
-                    if (mat_voto.ContainsKey(mat))
-                        mat_voto[mat] += CSVVoteSeparator;
-                    else
-                        mat_voto[mat] = "";
-
-                    mat_voto[mat] += $"{dataEsame}{CSVVoteFieldSeparator}{tipoAppello}{CSVVoteFieldSeparator}{voto}";
+                        if (mat_voto.ContainsKey(mat)) {
+                            mat_voto[mat] += CSVVoteSeparator;
+                        } else {
+                            mat_voto[mat] = "";
+                        }
+                        mat_voto[mat] += $"{data_esame}{CSVVoteFieldSeparator}{tipo_appello}{CSVVoteFieldSeparator}{voto}";
+                    }
                 }
             }
 
+
             //Console.WriteLine(mat_voto[928561]);
 
-
-            using (StreamWriter sw = new StreamWriter($"{materia}.csv")) {
+            string path_dest = Path.Combine(dir_path, $"{materia}.csv");
+            using (StreamWriter sw = new StreamWriter(path_dest)) {
                 foreach (KeyValuePair<string, string> kvp in mat_voto) {
                     sw.WriteLine($"{kvp.Key}{CSVFieldSeparator}{kvp.Value}");
                 }
             }
 
+        }
 
+
+        // Null -> la cartella fornita non e' valida
+        // List<string> contiene i file dei singoli appelli (se la cartella e' valida)
+        public static List<string> IsDirValid(string dir_path) {
+            string nome_materia = new DirectoryInfo(dir_path).Name;
+            string path_appelli = Path.Combine(dir_path, APPELLI_FOLDER);
+
+            // nome cartella non e' una materia o non esiste sottocartella degli appelli
+            if (!materie.Contains(nome_materia) || !Directory.Exists(path_appelli)) {
+                return null;
+            }
+
+            // controllo che i file siano nominati correttamente
+            List<string> files = new List<string>(Directory.EnumerateFiles(path_appelli));
+            Regex rg = new Regex(nome_materia + @"_\d{4}-\d{2}-\d{2}_(P|C|R)\.csv"); // $ non posso metterlo perche' con {2} esplode
+            bool res = files.All((file) => rg.IsMatch(Path.GetFileName(file))); // file contiene il percorso completo, a me serve solo il nome
+
+
+            return res ? files : null;
         }
 
         public static int GetVoto(string input, string materia) {
