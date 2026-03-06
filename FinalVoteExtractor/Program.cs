@@ -35,7 +35,8 @@ namespace FinalVoteExtractor {
                 "Architettura",
                 "Fondamenti",
                 "Programmazione1",
-                "Programmazione2"
+                "Programmazione2",
+                "MetodiAlgebrici"
                 };
 
         const string APPELLI_FOLDER = "SingoliAppelli";
@@ -164,6 +165,12 @@ namespace FinalVoteExtractor {
                         voto = 31;
                     } else {
                         int.TryParse(input, out voto);
+                    }
+                    break;
+                case "MetodiAlgebrici": // l'insufficienza e' sia < 18 che #N/D, quindi mi servono due controlli
+                    int.TryParse(input, out voto);
+                    if (voto < 18) {
+                        voto = 0;
                     }
                     break;
             }
