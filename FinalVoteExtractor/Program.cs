@@ -122,6 +122,7 @@ namespace FinalVoteExtractor {
             Regex rg = new Regex(nome_materia + @"_\d{4}-\d{2}-\d{2}_(P|C|R)\.csv"); // $ non posso metterlo perche' con {2} esplode
             bool res = files.All((file) => rg.IsMatch(Path.GetFileName(file))); // file contiene il percorso completo, a me serve solo il nome
 
+            files.Sort();
 
             return res ? files : null;
         }
