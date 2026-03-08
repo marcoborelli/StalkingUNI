@@ -36,7 +36,8 @@ namespace FinalVoteExtractor {
                 "Fondamenti",
                 "Programmazione1",
                 "Programmazione2",
-                "MetodiAlgebrici"
+                "MetodiAlgebrici",
+                "SistemiReti"
                 };
 
         const string APPELLI_FOLDER = "SingoliAppelli";
@@ -142,6 +143,7 @@ namespace FinalVoteExtractor {
 
                     break;
                 case "AlgebraLineare":
+                case "SistemiReti": // va bene, qui il 30L e' gia' scritto 31 o 31, -> non vado mai nell'if
                     if (input.Equals("30L")) {
                         voto = 31;
                     } else {
