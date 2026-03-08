@@ -34,6 +34,7 @@ Non tutti gli esami hanno lo stesso modo per rappresentare il voto finale (`-` i
 |**Programmazione2**|`'31'`                 |`'<voto>'`                         |`'Insuff' \|\| 'compitini non svolti'`|
 |**Algoritmi**      |`'30 LODE'`            |`'<voto>'`                         |`'RIT' \|\| 'INS' \|\| 'REC I' \|\| 'REC II'`|
 |**MetodiAlgebtici**|`'<voto [31-36]>'`     |`'<voto>'`                         | `'#N/D'` \|\| `'<voto>'` |
+|**SistemiReti**    |`'<voto [31-32]>'`     |`'<voto>'`                         | `'<voto>'`               |
 
 
 ## Modalità di voto in output
