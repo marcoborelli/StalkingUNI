@@ -124,9 +124,40 @@ namespace FinalVoteExtractor {
             Regex rg = new Regex(nome_materia + @"_\d{4}-\d{2}-\d{2}_(P|C|R)\.csv"); // $ non posso metterlo perche' con {2} esplode
             bool res = files.All((file) => rg.IsMatch(Path.GetFileName(file))); // file contiene il percorso completo, a me serve solo il nome
 
-            files.Sort();
+            files = RadixSort(files);
 
             return res ? files : null;
+        }
+
+        // A parita' di data l'ordine e': P, R, C
+        public static List<string> RadixSort(List<string> input) {
+            // Ordino per gli ultimi 5 caratteri <TipoEsame>.csv
+            // Da C# 8.0 file[^5..]
+            List<string> tmp = input.OrderBy(file => GetPriority(file.Substring(file.Length - 5))).ToList();
+
+            // Questo algoritmo e' stabile, Sort() non lo e'
+            // Da C# 8.0 file[..^5]
+            List<string> fin = tmp.OrderBy(file => file.Substring(0, file.Length - 5)).ToList();
+
+            return fin;
+        }
+
+        public static byte GetPriority(string input) {
+            byte res = 3;
+
+            switch(input) {
+                case "P.csv":
+                    res = 0;
+                    break;
+                case "R.csv":
+                    res = 1;
+                    break;
+                case "C.csv":
+                    res = 2;
+                    break;
+            }
+
+            return res;
         }
 
         public static int GetVoto(string input, string materia) {
