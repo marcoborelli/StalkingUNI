@@ -34,6 +34,14 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IVotoStrategy.cs" />
+    <Compile Include="Strategies\CStrategy_N_N_NS.cs" />
+    <Compile Include="Strategies\CStrategy_S_N_NS.cs" />
+    <Compile Include="Strategies\CStrategy_S_S_S.cs" />
+    <Compile Include="SFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Strategies\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

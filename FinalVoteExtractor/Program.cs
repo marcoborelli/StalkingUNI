@@ -67,6 +67,7 @@ namespace FinalVoteExtractor {
 
             string line = "";
             string materia = new DirectoryInfo(dir_path).Name;
+            IVotoStrategy strategy = SFactory.GetInstance().GetVotoStrategy(materia);
 
             foreach (string file_path in file_paths) {
                 // Replace() senno' nel tipo_appello c'e' anche l'estensione
@@ -82,7 +83,7 @@ namespace FinalVoteExtractor {
                         string mat = fields[(int)CSVField.Matricola].PadLeft(6, '0');
                         string votoEsame = fields[(int)CSVField.Voto];
 
-                        int voto = GetVoto(votoEsame, materia);
+                        int voto = strategy.GetVoto(votoEsame);
 
 
                         if (mat_voto.ContainsKey(mat)) {
@@ -160,56 +161,5 @@ namespace FinalVoteExtractor {
             return res;
         }
 
-        public static int GetVoto(string input, string materia) {
-            int voto = 0;
-
-            switch(materia) {
-                case "Analisi1":
-                    Regex rg = new Regex(@".+\s(?<votoInTrentesimi>\d+).+\s(?<suTrenta>\d)");
-                    Match match = rg.Match(input);
-
-                    if (rg.IsMatch(input)) {
-                        voto = int.Parse(match.Groups["votoInTrentesimi"].Value);
-                    }
-
-                    break;
-                case "AlgebraLineare":
-                case "SistemiReti": // va bene, qui il 30L e' gia' scritto 31 o 31, -> non vado mai nell'if
-                    if (input.Equals("30L")) {
-                        voto = 31;
-                    } else {
-                        voto = int.Parse(input);
-
-                        if (voto < 18) { // messo per standard, se e' insufficiente associo lo 0
-                            voto = 0;
-                        }
-                    }
-                    break;
-                case "Fondamenti":
-                case "Programmazione1":
-                case "Programmazione2":
-                case "Architettura":
-                    /* se TryParse fallisce -> voto = 0.
-                    Dato che `input` non è numero solo quando si è insufficienti, ritirati o assenti e' ok */
-                    int.TryParse(input, out voto);
-                    break;
-                case "Algoritmi":
-                    if (input.Equals("30 LODE")) {
-                        voto = 31;
-                    } else {
-                        int.TryParse(input, out voto);
-                    }
-                    break;
-                case "MetodiAlgebrici": // l'insufficienza e' sia < 18 che #N/D, quindi mi servono due controlli
-                    int.TryParse(input, out voto);
-                    if (voto < 18) {
-                        voto = 0;
-                    }
-                    break;
-            }
-
-
-            return voto;
-        }
     }
 }
